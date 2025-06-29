@@ -4,6 +4,7 @@ import { SplitText } from "gsap/all";
 import { useRef } from "react";
 import { useMediaQuery } from "react-responsive";
 
+gsap.registerPlugin(SplitText);
 const Hero = () => {
   const videoRef = useRef();
 
