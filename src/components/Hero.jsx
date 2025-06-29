@@ -10,7 +10,9 @@ const Hero = () => {
   const isMobile = useMediaQuery({ maxWidth: 767 }); // Adjust the breakpoint as needed
 
   // This is where you can add GSAP animations if needed
-  useGSAP(() => {
+useGSAP(() => {
+  document.fonts.ready.then(() => {
+    // SplitText animations
     const heroSplit = new SplitText(".title", { type: "chars, words" });
     const paragraphSplit = new SplitText(".subtitle", { type: "lines" });
 
@@ -32,40 +34,42 @@ const Hero = () => {
       delay: 1,
     });
 
-    gsap
-      .timeline({
-        scrollTrigger: {
-          trigger: "#hero",
-          start: "top top",
-          end: "bottom top",
-          scrub: true,
-        },
-      })
+    // Leaf parallax timeline
+    gsap.timeline({
+      scrollTrigger: {
+        trigger: "#hero",
+        start: "top top",
+        end: "bottom top",
+        scrub: true,
+      },
+    })
       .to(".right-leaf", { y: 200 }, 0)
       .to(".left-leaf", { y: -200 }, 0);
+  });
 
-    const startValue = isMobile ? "top 50%" : "center 60%";
-    const endValue = isMobile ? "120% top" : "bottom top";
+  // Video timeline
+  const startValue = isMobile ? "top 50%" : "center 60%";
+  const endValue = isMobile ? "120% top" : "bottom top";
 
-    //video animation timeline
-    // Create the animation timeline with a default duration
-
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: "video",
-        start: startValue,
-        end: endValue,
-        scrub: true,
-        pin: true,
-      },
-    });
-
-    videoRef.current.onloadedmetadata = () => {
-      tl.to(videoRef.current, {
-        currentTime: videoRef.current.duration,
+  const video = videoRef.current;
+  if (video) {
+    video.onloadedmetadata = () => {
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: video,
+          start: startValue,
+          end: endValue,
+          scrub: true,
+          pin: true,
+        },
+      }).to(video, {
+        currentTime: video.duration,
+        ease: "none",
       });
     };
-  }, []);
+  }
+}, []);
+
 
   return (
     <>
